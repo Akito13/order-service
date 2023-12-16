@@ -3,6 +3,10 @@ package com.example.bookshop.orderservice.exception;
 import com.example.bookshop.orderservice.dto.OrderDto;
 import com.example.bookshop.orderservice.dto.ResponseDto;
 import com.example.bookshop.orderservice.mapper.CommonMapper;
+import com.stripe.exception.ApiConnectionException;
+import com.stripe.exception.CardException;
+import com.stripe.exception.RateLimitException;
+import com.stripe.exception.StripeException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -36,6 +40,26 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SachNotAvailableException.class)
     public ResponseEntity<ErrorResponseDto> handleAccountNotFoundException(SachNotAvailableException exception, WebRequest request){
         return new ResponseEntity<>(CommonMapper.buildErrorResponse(exception, request, null, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CardException.class)
+    public ResponseEntity<ErrorResponseDto> handleCardException(CardException exception, WebRequest request){
+        return new ResponseEntity<>(CommonMapper.buildErrorResponse(new CardException("Không thể xác minh thẻ", exception.getRequestId(), exception.getCode(), exception.getParam(), exception.getDeclineCode(), exception.getCharge(), exception.getStatusCode(), exception), request, null, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(RateLimitException.class)
+    public ResponseEntity<ErrorResponseDto> handleRateLimitException(RateLimitException exception, WebRequest request){
+        return new ResponseEntity<>(CommonMapper.buildErrorResponse(exception, request, null, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ApiConnectionException.class)
+    public ResponseEntity<ErrorResponseDto> handleApiConnectionException(ApiConnectionException exception, WebRequest request){
+        return new ResponseEntity<>(CommonMapper.buildErrorResponse(new ApiConnectionException("Kết nối bị gián đoạn"), request, null, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(StripeException.class)
+    public ResponseEntity<ErrorResponseDto> handleStripeException(StripeException exception, WebRequest request){
+        return new ResponseEntity<>(CommonMapper.buildErrorResponse(new StripeException("Cổng thanh toán gặp lỗi", exception.getRequestId(), exception.getCode(), exception.getStatusCode()) {}, request, null, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

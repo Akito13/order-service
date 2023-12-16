@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class OrderDetailsPK implements Serializable {
-    private Order donHang;
+    private Order donhangId;
     private Long sachId;
+    private Long dhctId;
 }

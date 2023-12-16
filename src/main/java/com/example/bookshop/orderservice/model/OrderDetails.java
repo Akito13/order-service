@@ -10,18 +10,23 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "DonHangChiTiet")
-@IdClass(OrderDetailsPK.class)
+@Entity(name = "donhangchitiet")
+@Table(name = "donhangchitiet")
+//@IdClass(OrderDetailsPK.class)
 public class OrderDetails {
-    @Id
-    @Column(name = "donhang_id")
+//    @Id
     @ManyToOne
     @JoinColumn(name = "donhang_id")
-    private Order donHang;
+    private Order donhangId;
+
+//    @Id
+    @Column(name = "sach_id")
+    private Long sachId;
 
     @Id
-    private Long sachId;
+    @Column(name = "dhct_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long dhctId;
 
     @Column(name = "ten_sach")
     private String tenSach;

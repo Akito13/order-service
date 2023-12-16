@@ -1,26 +1,8 @@
-server:
-  port: 8083
 spring:
   application:
-    name: "donHang"
+    name: "order"
   config:
     import: "configserver:http://localhost:8071"
-    name: "donHang"
-  datasource:
-    url: "jdbc:sqlserver://localhost:1433;databaseName=QuanLyDonHang;encrypt=true;trustServerCertificate=true"
-    username: "sa"
-    password: ${DB_PASSWORD}
-  jpa:
-    show-sql: true
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    shutdown:
-      enabled: true
-  info:
-    env:
-      enabled: true
+  cloud:
+    config:
+      name: common, kafka-common, jwt-common, order

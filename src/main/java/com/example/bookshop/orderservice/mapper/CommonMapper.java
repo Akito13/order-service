@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +21,7 @@ public class CommonMapper {
                 .thoiGianDat(orderDto.getThoiGianDat() == null ? LocalDateTime.now() : orderDto.getThoiGianDat())
                 .trangThai(orderStatus)
                 .diaChi(orderDto.getDiaChi())
+                .tenNguoiNhan(orderDto.getTenNguoiNhan())
                 .sdt(orderDto.getSdt()).build();
     }
 
@@ -29,10 +29,11 @@ public class CommonMapper {
         return OrderDetails.builder()
                 .sachId(details.getSachId())
                 .tenSach(foundSoLuongSachDto.getTenSach())
-                .soLuong(foundSoLuongSachDto.getSoLuong())
+                .soLuong(details.getSoLuong())
                 .phanTramGiam(foundSoLuongSachDto.getPhanTramGiam())
                 .donGia(foundSoLuongSachDto.getDonGia())
-                .donHang(order).build();
+                .donhangId(order)
+                .tongTien(details.getTongTien()).build();
     }
 
     public static OrderDto mapToOrderDto(Order order) {
@@ -40,11 +41,12 @@ public class CommonMapper {
                 .diaChi(order.getDiaChi())
                 .donhangId(order.getDonhangId())
                 .nguoiDungId(order.getNguoiDungId())
+                .tenNguoiNhan(order.getTenNguoiNhan())
                 .sdt(order.getSdt())
                 .thoiGianXuat(order.getThoiGianXuat())
                 .tongTien(order.getTongTien())
                 .thoiGianDat(order.getThoiGianDat())
-                .trangThai(order.getTrangThai().getTrangThaiId()).build();
+                .trangThai(order.getTrangThai()).build();
     }
 
     public static List<OrderDetailDto> mapToListOrderDetailDto(List<OrderDetails> orderDetails) {
@@ -61,7 +63,7 @@ public class CommonMapper {
                 .tongTien(orderDetails.getTongTien()).build();
     }
 
-    public static ErrorResponseDto buildErrorResponse(RuntimeException exception, WebRequest request, Map<String, String> errors, HttpStatus httpStatus){
+    public static ErrorResponseDto buildErrorResponse(Throwable exception, WebRequest request, Map<String, String> errors, HttpStatus httpStatus){
         return ErrorResponseDto.builder()
                 .apiPath(request.getDescription(false))
                 .message(exception.getMessage())
